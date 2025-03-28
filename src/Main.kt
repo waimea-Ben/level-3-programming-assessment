@@ -39,6 +39,10 @@ fun main() {
 class App{
     // Constants defining any key values
     val maxClicks = 50
+    val key1 = "Lost Book"
+    val key2 = "Gold Totem"
+    val key3 = "The Key"
+    val maxMoves = 25
 
     // Data fields
     var clicks = 0
@@ -58,7 +62,7 @@ class App{
 }
 
 
-
+// room class with no directions by default
 class Room(val name: String, val desc: String){
     var locNorth: Room? = null
     var locEast: Room? = null
@@ -69,7 +73,7 @@ class Room(val name: String, val desc: String){
 }
 
 
-fun roomInit(app: App){
+fun roomInit(app: App){ // populate map with locations
     val entrance = Room("Entrance Hall", "A grand entrance with towering doors and flickering chandeliers.")
     val woodMan = Room("Woodland Mansion", "You find yourself in a dark and spooky building; bats linger around.")
     val forest = Room("Forest", "An empty forest with not much around.")
@@ -86,7 +90,7 @@ fun roomInit(app: App){
     val lighthouse = Room("Old Lighthouse", "A spiraling staircase leads up to a broken beacon.")
     val catacombs = Room("Catacombs", "Narrow tunnels wind through the earth, filled with the bones of the past.")
 
-
+// instantiate connections between rooms
     entrance.locNorth = woodMan
 
     woodMan.locSouth = entrance
@@ -98,7 +102,7 @@ fun roomInit(app: App){
 
     cave.locNorth = forest
     cave.locEast = riverbank
-    cave.item = "Key 1"
+    cave.item = app.key1 // adding key to room
 
     riverbank.locWest = cave
     riverbank.locSouth = bridge
@@ -107,10 +111,10 @@ fun roomInit(app: App){
     bridge.locEast = tower
 
     tower.locWest = bridge
-    tower.locSouth = village
+    //tower.locSouth = village
     tower.locEast = ruins
 
-    village.locNorth = tower
+    //village.locNorth = tower
     village.locEast = market
     village.locWest = dungeon
 
@@ -120,7 +124,7 @@ fun roomInit(app: App){
     dungeon.locNorth = library
     dungeon.locEast = village
     dungeon.locWest = ruins
-    dungeon.item = "Key 2"
+    dungeon.item = app.key2
 
     ruins.locWest = tower
     ruins.locEast = dungeon
@@ -135,9 +139,9 @@ fun roomInit(app: App){
     lighthouse.locWest = catacombs
 
     catacombs.locEast = lighthouse
-    catacombs.item = "Key 3"
+    catacombs.item = app.key3
 
-    app.currentRoom = entrance
+    app.currentRoom = entrance // starting room
 }
 /**
  * Main UI window (view)
@@ -281,7 +285,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
 
         }
         else {
-            clicksLabel.text = (50-app.clicks).toString()
+            clicksLabel.text = (app.maxMoves-app.clicks).toString()
         }
 
         val currentRoom = app.currentRoom
@@ -289,16 +293,39 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
         locationLabel.text = currentRoom?.name ?: "Unknown"
         locationDescription.text = "<html>" + (currentRoom?.desc ?: "No desc")
 
+
+        // Shows a padlock icon on the direction arrow to indicate locked route
+        upButton.text = when{
+            currentRoom?.name == "Ruined Temple" && !app.hasKey3 -> ("\uD83D\uDD12")
+            currentRoom?.name == "Dark Dungeon" && !app.hasKey1 -> ("\uD83D\uDD12")
+            else -> "N"
+        }
+
+        downButton.text = when{
+            currentRoom?.name == "Ancient Library" && !app.hasKey1 -> ("\uD83D\uDD12")
+            currentRoom?.name == "Abandoned Villager" && !app.hasKey2 -> ("\uD83D\uDD12")
+            else -> "S"
+        }
+
+        rightButton.text = when{
+            currentRoom?.name == "Dark Dungeon" && !app.hasKey2 -> "\uD83D\uDD12"
+            else -> "E"
+        }
+
+
+        //disables buttons when no direction available
         upButton.isEnabled = currentRoom?.locNorth != null
         downButton.isEnabled = currentRoom?.locSouth != null
         leftButton.isEnabled = currentRoom?.locWest != null
         rightButton.isEnabled = currentRoom?.locEast != null
 
+        // no item no search
         searchButton.isEnabled = currentRoom?.item != null
 
-        inv1.text = if(app.hasKey1)"Key 1" else "Empty"
-        inv2.text = if(app.hasKey2)"Key 2" else "Empty"
-        inv3.text = if(app.hasKey3)"Key 3" else "Empty"
+        // when item found update inventory slot
+        inv1.text = if(app.hasKey1) app.key1 else "Empty"
+        inv2.text = if(app.hasKey2) app.key2 else "Empty"
+        inv3.text = if(app.hasKey3) app.key3 else "Empty"
 
 
     }
@@ -314,6 +341,14 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
 
             upButton -> {
                 if (currentRoom?.locNorth != null) {
+                    if (currentRoom.name == "Ruined Temple" && !app.hasKey3){  //shows dialog explaining locked path to user hinting to item
+                        JOptionPane.showMessageDialog(this, "The path to the garden is locked, you must have the gold Key to continue","Blocked Path",JOptionPane.QUESTION_MESSAGE)
+                        return
+                    }
+                    if (currentRoom.name == "Dark Dungeon" && !app.hasKey1){
+                        JOptionPane.showMessageDialog(this, "A path leads up but a door blocks the way, it seems an item is needed","Blocked Path",JOptionPane.QUESTION_MESSAGE)
+                        return
+                    }
                     app.currentRoom = currentRoom.locNorth
                     app.updateClickCount()
                 }
@@ -322,6 +357,14 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
 
             downButton -> {
                 if (currentRoom?.locSouth != null) {
+                    if (currentRoom.name == "Ancient Library" && !app.hasKey1){
+                        JOptionPane.showMessageDialog(this, "A path seems near, but you dont quite know how to access it","Blocked Path",JOptionPane.QUESTION_MESSAGE)
+                        return
+                    }
+                    if (currentRoom.name == "Abandoned Village" && !app.hasKey2){
+                        JOptionPane.showMessageDialog(this, "One of the house has a basement passage, but you dont know how to get through","Blocked Path",JOptionPane.QUESTION_MESSAGE)
+                        return
+                    }
                     app.currentRoom = currentRoom.locSouth
                     app.updateClickCount()
                 }
@@ -336,25 +379,38 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
 
             rightButton -> {
                 if (currentRoom?.locEast != null) {
+                    if (currentRoom.name == "Dark Dungeon" && !app.hasKey2){
+                        JOptionPane.showMessageDialog(this, "A podium lays in the middle of the room, it seems an item is needed","Blocked Path",JOptionPane.QUESTION_MESSAGE)
+                        return
+                    }
                     app.currentRoom = currentRoom.locEast
                     app.updateClickCount()
                 }
             }
 
+
+            // when search button pressed shows Dialog about respective item and then removes item from room
             searchButton -> {
-                currentRoom?.item?.let {item ->
-                    when(item){
-                        "key 1" -> app.hasKey1 = true
-                        "key 2" -> app.hasKey2 = true
-                        "key 3" -> app.hasKey3 = true
+                    when(currentRoom?.item){
+                        app.key1 -> {
+                            app.hasKey1 = true
+                            JOptionPane.showMessageDialog(this, "<html><p style=text-align: center;>You found a Book in the grasp of a skeleton. A note reads: <br> <i>A secret passage lies ahead, put this next to the book about the dead <i></p>")
+                        }
+                        app.key2 -> {
+                            app.hasKey2 = true
+                            JOptionPane.showMessageDialog(this, "<html><p style=text-align: center;>A Golden totem sits in a small leather pouch in the corner. an ominous shriek echos as you pick it up</p>")
+                        }
+                        app.key3 ->{
+                            app.hasKey3 = true
+                            JOptionPane.showMessageDialog(this, "<html><p style=text-align: center;>A blade of light pierces through a hole in the ceiling, illuminating a glistening golden key in the hands of a towering statue. <br><i>The Key to Life</i> <br> is engraved along the head.</p>")
+
+                        }
                     }
                     app.currentRoom?.item = null
-                    updateView()
-                }
             }
 
         }
-        updateView()
+        updateView() // run update view
     }
 
 }
