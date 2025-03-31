@@ -38,7 +38,6 @@ fun main() {
  */
 class App{
     // Constants defining any key values
-    val maxClicks = 50
     val key1 = "Lost Book"
     val key2 = "Gold Totem"
     val key3 = "The Key"
@@ -55,9 +54,12 @@ class App{
     // Application logic functions
     fun updateClickCount() {
         clicks++
-        if (clicks > maxClicks) clicks = maxClicks
+        if (clicks > maxMoves) clicks = maxMoves
     }
 
+    fun die(){
+        println("dead")
+    }
 
 }
 
@@ -102,7 +104,7 @@ fun roomInit(app: App){ // populate map with locations
 
     cave.locNorth = forest
     cave.locEast = riverbank
-    cave.item = app.key1 // adding key to room
+    cave.item = app.key1 // adding key1 to room
 
     riverbank.locWest = cave
     riverbank.locSouth = bridge
@@ -111,10 +113,8 @@ fun roomInit(app: App){ // populate map with locations
     bridge.locEast = tower
 
     tower.locWest = bridge
-    //tower.locSouth = village
     tower.locEast = ruins
 
-    //village.locNorth = tower
     village.locEast = market
     village.locWest = dungeon
 
@@ -173,7 +173,6 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
 
 
 
-
     /**
      * Configure the UI and display it
      */
@@ -191,14 +190,61 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
      * Configure the main window
      */
     private fun configureWindow() {
-        title = "Key to life"
+        title = "Key to Life"
         contentPane.preferredSize = Dimension(500, 350)
         defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
         isResizable = false
         layout = null
 
+
+        //*********************************************************************************************************
+        // borrowed code. need to replace
+
+        val helpButton = JButton("?").apply {
+            preferredSize = Dimension(45, 25) // Match title bar button size
+            maximumSize = preferredSize
+            minimumSize = preferredSize
+            isFocusPainted = false
+            isBorderPainted = false
+            isContentAreaFilled = false
+            background = UIManager.getColor("control") // Default background
+
+            // Hover effect
+            addMouseListener(object : MouseAdapter() {
+                override fun mouseEntered(e: MouseEvent?) {
+                    background = Color(85, 88, 92) // Light gray hover effect
+                    isContentAreaFilled = true
+                }
+
+                override fun mouseExited(e: MouseEvent?) {
+                    background = UIManager.getColor("control") // Restore default
+                    isContentAreaFilled = false
+                }
+            })
+
+            addActionListener {
+                JOptionPane.showMessageDialog(this, "This is a help dialog.", "Help", JOptionPane.INFORMATION_MESSAGE)
+            }
+        }
+
+        // Get the window's top-right control buttons
+        val menuBar = JMenuBar().apply {
+            layout = BoxLayout(this, BoxLayout.X_AXIS)
+            add(Box.createHorizontalGlue()) // Push the button to the right
+            add(helpButton)
+        }
+        jMenuBar = menuBar // Set as title bar menu
+
+        // Remove window corner radius (sharp corners)
+        rootPane.border = BorderFactory.createEmptyBorder() // Ensure no padding or rounded edges
+
+        //*********************************************************************************************************
+
+
         pack()
     }
+
+
 
     /**
      * Populate the UI with UI controls
@@ -280,7 +326,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
      * of the application model
      */
     private fun updateView() {
-        if (app.clicks == app.maxClicks) {
+        if (app.clicks == app.maxMoves) {
+            app.die()
             clicksLabel.text = "0"
 
         }
