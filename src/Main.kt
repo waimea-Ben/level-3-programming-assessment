@@ -41,31 +41,136 @@ class App{
     val key1 = "Lost Book"
     val key2 = "Gold Totem"
     val key3 = "The Key"
-    val maxMoves = 25
+    val item4 = "Compass"
+    val maxMoves = 50
 
     // Data fields
     var clicks = 0
     var currentRoom: Room? = null
 
+    var hasCompass = false
     var hasKey1 = false
     var hasKey2 = false
     var hasKey3 = false
 
     // Application logic functions
-    fun updateClickCount() {
+    private fun updateClickCount() {
         clicks++
         if (clicks > maxMoves) clicks = maxMoves
     }
 
-    fun die(){
-        println("dead")
+
+
+    fun up(){
+        if (currentRoom?.locNorth != null) {
+            if (currentRoom!!.name == "Ruined Temple" && !hasKey3){  //shows dialog explaining locked path to user hinting to item
+                JOptionPane.showMessageDialog(
+                    null,
+                    "The path to the garden is locked, you must have the gold Key to continue",
+                    "Blocked Path",
+                    JOptionPane.QUESTION_MESSAGE)
+                return
+            }
+            if (currentRoom!!.name == "Dark Dungeon" && !hasKey1){
+                JOptionPane.showMessageDialog(
+                    null,
+                    "A path leads up but a door blocks the way, it seems an item is needed",
+                    "Blocked Path",
+                    JOptionPane.QUESTION_MESSAGE)
+                return
+            }
+            currentRoom = currentRoom!!.locNorth
+            updateClickCount()
+        }
+    }
+
+    fun down(){
+        if (currentRoom?.locSouth != null) {
+            if (currentRoom!!.name == "Ancient Library" && !hasKey1){
+                JOptionPane.showMessageDialog(
+                    null,
+                    "A path seems near, but you dont quite know how to access it",
+                    "Blocked Path",
+                    JOptionPane.QUESTION_MESSAGE)
+                return
+            }
+            if (currentRoom!!.name == "Abandoned Village" && !hasKey2){
+                JOptionPane.showMessageDialog(
+                    null,
+                    "One of the house has a basement passage, but you dont know how to get through",
+                    "Blocked Path",
+                    JOptionPane.QUESTION_MESSAGE)
+                return
+            }
+            currentRoom = currentRoom!!.locSouth
+            updateClickCount()
+        }
+    }
+
+    fun left(){
+        if (currentRoom?.locWest != null) {
+            currentRoom = currentRoom!!.locWest
+            updateClickCount()
+        }
+    }
+
+    fun right(){
+        if (currentRoom?.locEast != null) {
+            if (currentRoom!!.name == "Dark Dungeon" && !hasKey2){
+                JOptionPane.showMessageDialog(
+                    null,
+                    "A podium lays in the middle of the room, it seems an item is needed",
+                    "Blocked Path",
+                    JOptionPane.QUESTION_MESSAGE)
+                return
+            }
+            currentRoom = currentRoom!!.locEast
+            updateClickCount()
+        }
+    }
+
+    fun search(){
+        when(currentRoom?.item){
+            key1 -> {
+                hasKey1 = true
+                JOptionPane.showMessageDialog(
+                    null,
+                    "<html><p style=text-align: center;>You found a Book in the grasp of a skeleton. A note reads: <br> " +
+                            "<i>A secret passage lies ahead, put this next to the book about the dead <i></p>")
+            }
+            key2 -> {
+                hasKey2 = true
+                JOptionPane.showMessageDialog(
+                    null,
+                    "<html><p style=text-align: center;>A Golden totem sits in a small leather pouch in the corner. an ominous shriek echos as you pick it up</p>")
+            }
+            key3 ->{
+                hasKey3 = true
+                JOptionPane.showMessageDialog(
+                    null,
+                    "<html><p style=text-align: center;>A blade of light pierces through a hole in the ceiling, illuminating a glistening golden key in the hands of a towering statue. " +
+                            "<br><i>The Key to Life</i> <br> is engraved along the head.</p>")
+
+            }
+            item4 ->{
+                hasCompass = true
+                JOptionPane.showMessageDialog(
+                    null,
+                    "<html><p style='text-align: center;'>A hefty compass rests by the door, its needle spinning wildly before settling in one direction.</p>",
+                    "Found: Compass",
+                    JOptionPane.INFORMATION_MESSAGE
+                )
+
+            }
+        }
+        currentRoom?.item = null
     }
 
 }
 
 
 // room class with no directions by default
-class Room(val name: String, val desc: String){
+class Room(val name: String, val desc: String, val direction: String){
     var locNorth: Room? = null
     var locEast: Room? = null
     var locSouth: Room? = null
@@ -74,26 +179,26 @@ class Room(val name: String, val desc: String){
 
 }
 
-
 fun roomInit(app: App){ // populate map with locations
-    val entrance = Room("Entrance Hall", "A grand entrance with towering doors and flickering chandeliers.")
-    val woodMan = Room("Woodland Mansion", "You find yourself in a dark and spooky building; bats linger around.")
-    val forest = Room("Forest", "An empty forest with not much around.")
-    val cave = Room("Cave", "Damp and cold, the echoes of dripping water fill the cavern.")
-    val riverbank = Room("Riverbank", "A gentle river flows by, reflecting the light of the moon.")
-    val bridge = Room("Old Bridge", "A rickety wooden bridge sways over a deep chasm.")
-    val tower = Room("Watchtower", "A tall, crumbling tower with a view of the entire landscape.")
-    val village = Room("Abandoned Village", "Houses stand in disrepair, long since left behind.")
-    val library = Room("Ancient Library", "Dusty bookshelves line the walls, filled with forgotten knowledge.")
-    val dungeon = Room("Dark Dungeon", "Chains hang from the walls, and the air smells of damp stone.")
-    val ruins = Room("Ruined Temple", "Overgrown with vines, this place holds the whispers of the past.")
-    val garden = Room("Hidden Garden", "A beautiful, untouched oasis filled with vibrant flowers.")
-    val market = Room("Deserted Market", "Stalls remain, but no merchants can be found.")
-    val lighthouse = Room("Old Lighthouse", "A spiraling staircase leads up to a broken beacon.")
-    val catacombs = Room("Catacombs", "Narrow tunnels wind through the earth, filled with the bones of the past.")
+    val entrance = Room("Entrance Hall", "A grand entrance with towering doors and flickering chandeliers.", "\uD83E\uDC56")
+    val woodMan = Room("Woodland Mansion", "You find yourself in a dark and spooky building; bats linger around.","\uD83E\uDC56")
+    val forest = Room("Forest", "An empty forest with not much around.","\uD83E\uDC56")
+    val cave = Room("Cave", "Damp and cold, the echoes of dripping water fill the cavern.","\uD83E\uDC56")
+    val riverbank = Room("Riverbank", "A gentle river flows by, reflecting the light of the moon.","\uD83E\uDC52")
+    val bridge = Room("Old Bridge", "A rickety wooden bridge sways over a deep chasm.","\uD83E\uDC52")
+    val tower = Room("Watchtower", "A tall, crumbling tower with a view of the entire landscape.","\uD83E\uDC55")
+    val village = Room("Abandoned Village", "Houses stand in disrepair, long since left behind.","\uD83E\uDC54")
+    val library = Room("Ancient Library", "Dusty bookshelves line the walls, filled with forgotten knowledge.","\uD83E\uDC53")
+    val dungeon = Room("Dark Dungeon", "Chains hang from the walls, and the air smells of damp stone.","\uD83E\uDC54")
+    val ruins = Room("Ruined Temple", "Overgrown with vines, this place holds the whispers of the past.","\uD83E\uDC51")
+    val garden = Room("Hidden Garden", "A beautiful, untouched oasis filled with vibrant flowers.","·")
+    val market = Room("Deserted Market", "Stalls remain, but no merchants can be found.","\uD83E\uDC54")
+    val lighthouse = Room("Old Lighthouse", "A spiraling staircase leads up to a broken beacon.","\uD83E\uDC50")
+    val catacombs = Room("Catacombs", "Narrow tunnels wind through the earth, filled with the bones of the past.","\uD83E\uDC50")
 
 // instantiate connections between rooms
     entrance.locNorth = woodMan
+    entrance.item = app.item4
 
     woodMan.locSouth = entrance
     woodMan.locWest = forest
@@ -142,13 +247,18 @@ fun roomInit(app: App){ // populate map with locations
     catacombs.item = app.key3
 
     app.currentRoom = entrance // starting room
+
+
+
+
+
 }
 /**
  * Main UI window (view)
  * Defines the UI and responds to events
  * The app model should be passwd as an argument
  */
-class MainWindow(private val app: App) : JFrame(), ActionListener {
+class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
 
     // Fields to hold the UI elements
     private lateinit var clicksLabel: JLabel
@@ -166,6 +276,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
     private lateinit var inv3: JLabel
 
     private lateinit var searchButton: JButton
+    private lateinit var examplePopUp: PopUpDialog
+    private lateinit var compass: JLabel
 
 
 
@@ -179,10 +291,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
     init {
         configureWindow()               // Configure the window
         addControls()                   // Build the UI
-
         setLocationRelativeTo(null)     // Centre the window
         isVisible = true                // Make it visible
-
         updateView()                    // Initialise the UI
     }
 
@@ -200,32 +310,39 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
         //*********************************************************************************************************
         // borrowed code. need to replace
 
+        UIManager.put("Button.arc", 0) // Remove button corner rounding
+
         val helpButton = JButton("?").apply {
-            preferredSize = Dimension(45, 25) // Match title bar button size
+            preferredSize = Dimension(45, 30)
             maximumSize = preferredSize
             minimumSize = preferredSize
+
             isFocusPainted = false
             isBorderPainted = false
-            isContentAreaFilled = false
-            background = UIManager.getColor("control") // Default background
+            isContentAreaFilled = true // FlatLaf styling applies only if true
+            background = UIManager.getColor("control")
+
+
+            // Override border to remove rounding
+            border = BorderFactory.createEmptyBorder()
 
             // Hover effect
             addMouseListener(object : MouseAdapter() {
                 override fun mouseEntered(e: MouseEvent?) {
                     background = Color(85, 88, 92) // Light gray hover effect
-                    isContentAreaFilled = true
                 }
 
                 override fun mouseExited(e: MouseEvent?) {
                     background = UIManager.getColor("control") // Restore default
-                    isContentAreaFilled = false
                 }
             })
 
             addActionListener {
-                JOptionPane.showMessageDialog(this, "This is a help dialog.", "Help", JOptionPane.INFORMATION_MESSAGE)
+                examplePopUp.isVisible = true
             }
         }
+
+
 
         // Get the window's top-right control buttons
         val menuBar = JMenuBar().apply {
@@ -250,7 +367,18 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
      * Populate the UI with UI controls
      */
     private fun addControls() {
+
+        examplePopUp = PopUpDialog()
+        examplePopUp.isVisible = true
+
+        this.addKeyListener(this)
+
         val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 36)
+
+        compass = JLabel("")
+        compass.font = baseFont
+        compass.bounds = Rectangle(50, 0, 100, 100)
+        add(compass)
 
         clicksLabel = JLabel("50")
         clicksLabel.horizontalAlignment = SwingConstants.CENTER
@@ -275,24 +403,28 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
         upButton.bounds = Rectangle(225, 233, 50, 50)
         upButton.font = baseFont
         upButton.addActionListener(this)
+        upButton.isFocusable = false
         add(upButton)
 
         downButton = JButton("S")
         downButton.bounds = Rectangle(225, 288, 50, 50)
         downButton.font = baseFont
         downButton.addActionListener(this)
+        downButton.isFocusable = false
         add(downButton)
 
         leftButton = JButton("W")
         leftButton.bounds = Rectangle(170, 288, 50, 50)
         leftButton.font = baseFont
         leftButton.addActionListener(this)
+        leftButton.isFocusable = false
         add(leftButton)
 
         rightButton = JButton("E")
         rightButton.bounds = Rectangle(280, 288, 50, 50)
         rightButton.font = baseFont
         rightButton.addActionListener(this)
+        rightButton.isFocusable = false
         add(rightButton)
 
         inv1 = JLabel("Empty")
@@ -314,6 +446,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
         searchButton.bounds = Rectangle(375, 200, 75, 75)
         searchButton.font = baseFont
         searchButton.addActionListener(this)
+        searchButton.isFocusable = false
         add(searchButton)
 
 
@@ -321,14 +454,29 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
     }
 
 
+
     /**
      * Update the UI controls based on the current state
      * of the application model
      */
     private fun updateView() {
-        if (app.clicks == app.maxMoves) {
-            app.die()
+
+        this.requestFocus()
+
+        if (app.clicks >= app.maxMoves) {
+            // Disable movement buttons after death
+            upButton.isEnabled = false
+            downButton.isEnabled = false
+            leftButton.isEnabled = false
+            rightButton.isEnabled = false
+            searchButton.isEnabled = false
             clicksLabel.text = "0"
+            JOptionPane.showMessageDialog(
+                null,
+                "<html><p style=text-align: center;><p>The ghastly Plague got released vanishing all traces of you from the continuum of time we call life!<p>",
+                "Game Over",
+                JOptionPane.INFORMATION_MESSAGE)
+            dispose()
 
         }
         else {
@@ -345,18 +493,27 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
         upButton.text = when{
             currentRoom?.name == "Ruined Temple" && !app.hasKey3 -> ("\uD83D\uDD12")
             currentRoom?.name == "Dark Dungeon" && !app.hasKey1 -> ("\uD83D\uDD12")
+            currentRoom?.name == "Ruined Temple" && app.hasKey3 -> ("\uD83D\uDD13")
+            currentRoom?.name == "Dark Dungeon" && app.hasKey1 -> ("\uD83D\uDD13")
             else -> "N"
         }
 
         downButton.text = when{
             currentRoom?.name == "Ancient Library" && !app.hasKey1 -> ("\uD83D\uDD12")
-            currentRoom?.name == "Abandoned Villager" && !app.hasKey2 -> ("\uD83D\uDD12")
+            currentRoom?.name == "Ancient Library" && app.hasKey1 -> ("\uD83D\uDD13")
             else -> "S"
         }
 
         rightButton.text = when{
             currentRoom?.name == "Dark Dungeon" && !app.hasKey2 -> "\uD83D\uDD12"
+            currentRoom?.name == "Dark Dungeon" && app.hasKey2 -> "\uD83D\uDD13"
             else -> "E"
+        }
+
+        leftButton.text = when{
+            currentRoom?.name == "Abandoned Village" && !app.hasKey2 -> ("\uD83D\uDD12")
+            currentRoom?.name == "Abandoned Village" && app.hasKey2 -> ("\uD83D\uDD13")
+            else -> "W"
         }
 
 
@@ -374,6 +531,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
         inv2.text = if(app.hasKey2) app.key2 else "Empty"
         inv3.text = if(app.hasKey3) app.key3 else "Empty"
 
+        if(app.hasCompass) compass.text = currentRoom?.direction
 
     }
 
@@ -383,82 +541,88 @@ class MainWindow(private val app: App) : JFrame(), ActionListener {
      * then refreshing the UI view
      */
     override fun actionPerformed(e: ActionEvent?) {
-        val currentRoom = app.currentRoom
         when (e?.source) {
+            upButton -> app.up()
+            downButton -> app.down()
+            leftButton -> app.left()
+            rightButton -> app.right()
 
-            upButton -> {
-                if (currentRoom?.locNorth != null) {
-                    if (currentRoom.name == "Ruined Temple" && !app.hasKey3){  //shows dialog explaining locked path to user hinting to item
-                        JOptionPane.showMessageDialog(this, "The path to the garden is locked, you must have the gold Key to continue","Blocked Path",JOptionPane.QUESTION_MESSAGE)
-                        return
-                    }
-                    if (currentRoom.name == "Dark Dungeon" && !app.hasKey1){
-                        JOptionPane.showMessageDialog(this, "A path leads up but a door blocks the way, it seems an item is needed","Blocked Path",JOptionPane.QUESTION_MESSAGE)
-                        return
-                    }
-                    app.currentRoom = currentRoom.locNorth
-                    app.updateClickCount()
-                }
-
-            }
-
-            downButton -> {
-                if (currentRoom?.locSouth != null) {
-                    if (currentRoom.name == "Ancient Library" && !app.hasKey1){
-                        JOptionPane.showMessageDialog(this, "A path seems near, but you dont quite know how to access it","Blocked Path",JOptionPane.QUESTION_MESSAGE)
-                        return
-                    }
-                    if (currentRoom.name == "Abandoned Village" && !app.hasKey2){
-                        JOptionPane.showMessageDialog(this, "One of the house has a basement passage, but you dont know how to get through","Blocked Path",JOptionPane.QUESTION_MESSAGE)
-                        return
-                    }
-                    app.currentRoom = currentRoom.locSouth
-                    app.updateClickCount()
-                }
-            }
-
-            leftButton -> {
-                if (currentRoom?.locWest != null) {
-                    app.currentRoom = currentRoom.locWest
-                    app.updateClickCount()
-                }
-            }
-
-            rightButton -> {
-                if (currentRoom?.locEast != null) {
-                    if (currentRoom.name == "Dark Dungeon" && !app.hasKey2){
-                        JOptionPane.showMessageDialog(this, "A podium lays in the middle of the room, it seems an item is needed","Blocked Path",JOptionPane.QUESTION_MESSAGE)
-                        return
-                    }
-                    app.currentRoom = currentRoom.locEast
-                    app.updateClickCount()
-                }
-            }
+            searchButton -> app.search()
+        }
+        updateView() // run update view
+    }
 
 
-            // when search button pressed shows Dialog about respective item and then removes item from room
-            searchButton -> {
-                    when(currentRoom?.item){
-                        app.key1 -> {
-                            app.hasKey1 = true
-                            JOptionPane.showMessageDialog(this, "<html><p style=text-align: center;>You found a Book in the grasp of a skeleton. A note reads: <br> <i>A secret passage lies ahead, put this next to the book about the dead <i></p>")
-                        }
-                        app.key2 -> {
-                            app.hasKey2 = true
-                            JOptionPane.showMessageDialog(this, "<html><p style=text-align: center;>A Golden totem sits in a small leather pouch in the corner. an ominous shriek echos as you pick it up</p>")
-                        }
-                        app.key3 ->{
-                            app.hasKey3 = true
-                            JOptionPane.showMessageDialog(this, "<html><p style=text-align: center;>A blade of light pierces through a hole in the ceiling, illuminating a glistening golden key in the hands of a towering statue. <br><i>The Key to Life</i> <br> is engraved along the head.</p>")
 
-                        }
-                    }
-                    app.currentRoom?.item = null
-            }
+    override fun keyPressed(e: KeyEvent?) {
+        when (e?.keyCode) {
+            KeyEvent.VK_UP -> app.up()
+            KeyEvent.VK_DOWN -> app.down()
+            KeyEvent.VK_LEFT -> app.left()
+            KeyEvent.VK_RIGHT -> app.right()
+
+            KeyEvent.VK_S -> app.search()
+
+            KeyEvent.VK_H -> examplePopUp.isVisible = true
+            KeyEvent.VK_SLASH -> examplePopUp.isVisible = true
 
         }
         updateView() // run update view
     }
 
+    override fun keyReleased(e: KeyEvent?) {
+
+    }
+    override fun keyTyped(e: KeyEvent?) {
+
+    }
+
 }
 
+
+
+class PopUpDialog: JDialog(), KeyListener {
+
+    init {
+        configureWindow()
+        setLocationRelativeTo(null)
+        addControls()
+        addKeyListener(this)
+    }
+
+    private fun addControls() {
+        val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 16)
+
+        val message = JLabel(
+            "<html><p><strong>Welcome to Freaky Ahh House!</strong><br><br>Explore a spooky mansion and collect keys to unlock new areas. " +
+                    "Move through rooms using the direction buttons or arrow keys, and keep an eye on on the search button (S) for important items needed to progress.<br><br>" +
+                    "Your goal is to find all the keys and uncover the mansion's secret garden before being removed from existence by a miserable plague released after you run out of steps. " +
+                    "Some paths are locked, so you’ll need to gather items to unlock them.<br><br>Good luck, and enjoy the adventure!<br><br>H or ? to bring this menu back up.</p>"
+        )
+        message.bounds = Rectangle(25, 25, 475, 325)
+        message.verticalAlignment = SwingConstants.TOP
+        message.font = baseFont
+        add(message)
+    }
+
+    private fun configureWindow() {
+        title = "Key To life Help"
+        contentPane.preferredSize = Dimension(500, 350)
+        isResizable = false
+        isModal = true
+        layout = null
+
+        pack()
+    }
+
+    override fun keyTyped(e: KeyEvent?) {}
+
+    override fun keyPressed(e: KeyEvent?) {
+        if (e?.keyCode == KeyEvent.VK_ESCAPE) {
+            dispose()
+        }
+
+    }
+
+    override fun keyReleased(e: KeyEvent?) {}
+}
