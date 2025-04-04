@@ -12,7 +12,7 @@
  */
 
 
-
+// import all required functions and decor
 import com.formdev.flatlaf.FlatDarkLaf
 import java.awt.*
 import java.awt.event.*
@@ -42,7 +42,7 @@ class App{
     val key2 = "Gold Totem"
     val key3 = "The Key"
     val item4 = "Compass"
-    val maxMoves = 50
+    val maxMoves = 30
 
     // Data fields
     var clicks = 0
@@ -179,7 +179,8 @@ class Room(val name: String, val desc: String, val direction: String){
 
 }
 
-fun roomInit(app: App){ // populate map with locations
+// populate map with locations
+fun roomInit(app: App){
     val entrance = Room("Entrance Hall", "A grand entrance with towering doors and flickering chandeliers.", "\uD83E\uDC56")
     val woodMan = Room("Woodland Mansion", "You find yourself in a dark and spooky building; bats linger around.","\uD83E\uDC56")
     val forest = Room("Forest", "An empty forest with not much around.","\uD83E\uDC56")
@@ -253,6 +254,7 @@ fun roomInit(app: App){ // populate map with locations
 
 
 }
+
 /**
  * Main UI window (view)
  * Defines the UI and responds to events
@@ -307,23 +309,16 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         layout = null
 
 
-        //*********************************************************************************************************
-        // borrowed code. need to replace
-
-        UIManager.put("Button.arc", 0) // Remove button corner rounding
-
+        // Add Help button to top bar
         val helpButton = JButton("?").apply {
             preferredSize = Dimension(45, 30)
             maximumSize = preferredSize
             minimumSize = preferredSize
-
             isFocusPainted = false
             isBorderPainted = false
             isContentAreaFilled = true // FlatLaf styling applies only if true
             background = UIManager.getColor("control")
-
-
-            // Override border to remove rounding
+            toolTipText = "Help"
             border = BorderFactory.createEmptyBorder()
 
             // Hover effect
@@ -343,7 +338,6 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         }
 
 
-
         // Get the window's top-right control buttons
         val menuBar = JMenuBar().apply {
             layout = BoxLayout(this, BoxLayout.X_AXIS)
@@ -352,10 +346,6 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         }
         jMenuBar = menuBar // Set as title bar menu
 
-        // Remove window corner radius (sharp corners)
-        rootPane.border = BorderFactory.createEmptyBorder() // Ensure no padding or rounded edges
-
-        //*********************************************************************************************************
 
 
         pack()
@@ -404,6 +394,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         upButton.font = baseFont
         upButton.addActionListener(this)
         upButton.isFocusable = false
+        upButton.toolTipText = "North"
         add(upButton)
 
         downButton = JButton("S")
@@ -411,6 +402,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         downButton.font = baseFont
         downButton.addActionListener(this)
         downButton.isFocusable = false
+        downButton.toolTipText = "South"
         add(downButton)
 
         leftButton = JButton("W")
@@ -418,6 +410,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         leftButton.font = baseFont
         leftButton.addActionListener(this)
         leftButton.isFocusable = false
+        leftButton.toolTipText = "West"
         add(leftButton)
 
         rightButton = JButton("E")
@@ -425,6 +418,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         rightButton.font = baseFont
         rightButton.addActionListener(this)
         rightButton.isFocusable = false
+        rightButton.toolTipText = "East"
         add(rightButton)
 
         inv1 = JLabel("Empty")
@@ -447,6 +441,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         searchButton.font = baseFont
         searchButton.addActionListener(this)
         searchButton.isFocusable = false
+        searchButton.toolTipText = "Search"
         add(searchButton)
 
 
@@ -473,7 +468,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
             clicksLabel.text = "0"
             JOptionPane.showMessageDialog(
                 null,
-                "<html><p style=text-align: center;><p>The ghastly Plague got released vanishing all traces of you from the continuum of time we call life!<p>",
+                "<html><p style=text-align: center;>The ghastly plague is released, removing you from the timeline of life <br> \n" +
+                        "<i>for you, the game is over... <i></p>",
                 "Game Over",
                 JOptionPane.INFORMATION_MESSAGE)
             dispose()
@@ -561,6 +557,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
             KeyEvent.VK_LEFT -> app.left()
             KeyEvent.VK_RIGHT -> app.right()
 
+            KeyEvent.VK_ENTER -> app.search()
             KeyEvent.VK_S -> app.search()
 
             KeyEvent.VK_H -> examplePopUp.isVisible = true
@@ -580,7 +577,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
 }
 
 
-
+//Pop-up to show relevant details instructions and help
 class PopUpDialog: JDialog(), KeyListener {
 
     init {
@@ -625,4 +622,5 @@ class PopUpDialog: JDialog(), KeyListener {
     }
 
     override fun keyReleased(e: KeyEvent?) {}
-}
+
+    }
