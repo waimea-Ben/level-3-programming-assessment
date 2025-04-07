@@ -42,6 +42,8 @@ class App{
     val key2 = "Gold Totem"
     val key3 = "The Key"
     val item4 = "Compass"
+    val winKey = "The Eldritch Toaster"
+
     val maxMoves = 30
 
     // Data fields
@@ -52,6 +54,8 @@ class App{
     var hasKey1 = false
     var hasKey2 = false
     var hasKey3 = false
+    private var hasWinKey = false
+
 
     // Application logic functions
     private fun updateClickCount() {
@@ -71,6 +75,15 @@ class App{
                     JOptionPane.QUESTION_MESSAGE)
                 return
             }
+            if (currentRoom!!.name == "Ruined Temple" && hasKey3) {  //shows dialogue about the door unlocking
+                JOptionPane.showMessageDialog(
+                    null,
+                    "<html><p style=text-align: center;>The key slides into the lock with a satisfying click.<br>As you turn it the ground seems to shake around you as the giant archways creaks open as your blinded by the beams of light piecing through the opening</p>",
+                    "Blocked Path",
+                    JOptionPane.QUESTION_MESSAGE
+                )
+            }
+
             if (currentRoom!!.name == "Dark Dungeon" && !hasKey1){
                 JOptionPane.showMessageDialog(
                     null,
@@ -136,20 +149,26 @@ class App{
                 JOptionPane.showMessageDialog(
                     null,
                     "<html><p style=text-align: center;>You found a Book in the grasp of a skeleton. A note reads: <br> " +
-                            "<i>A secret passage lies ahead, put this next to the book about the dead <i></p>")
+                            "<i>A secret passage lies ahead, put this next to the book about the dead <i></p>",
+                    "Found: $key1",
+                    JOptionPane.INFORMATION_MESSAGE)
             }
             key2 -> {
                 hasKey2 = true
                 JOptionPane.showMessageDialog(
                     null,
-                    "<html><p style=text-align: center;>A Golden totem sits in a small leather pouch in the corner. an ominous shriek echos as you pick it up</p>")
+                    "<html><p style=text-align: center;>A Golden totem sits in a small leather pouch in the corner. an ominous shriek echos as you pick it up</p>",
+                    "Found: $key2",
+                    JOptionPane.INFORMATION_MESSAGE)
             }
             key3 ->{
                 hasKey3 = true
                 JOptionPane.showMessageDialog(
                     null,
                     "<html><p style=text-align: center;>A blade of light pierces through a hole in the ceiling, illuminating a glistening golden key in the hands of a towering statue. " +
-                            "<br><i>The Key to Life</i> <br> is engraved along the head.</p>")
+                            "<br><i>The Key to Life</i> <br> is engraved along the head.</p>",
+                    "Found: $key3",
+                    JOptionPane.INFORMATION_MESSAGE)
 
             }
             item4 ->{
@@ -157,10 +176,19 @@ class App{
                 JOptionPane.showMessageDialog(
                     null,
                     "<html><p style='text-align: center;'>A hefty compass rests by the door, its needle spinning wildly before settling in one direction.</p>",
-                    "Found: Compass",
+                    "Found: $item4",
                     JOptionPane.INFORMATION_MESSAGE
                 )
 
+            }
+            winKey ->{
+                hasWinKey = true
+                JOptionPane.showMessageDialog(
+                    null,
+                    "<html><p style='text-align: center;'>Within the growths of the pristine garden greens, A relic lies within. An ancient toaster that whispers in tongues. Burnt bread holds the secrets of the house.</p>",
+                    "Found: $winKey",
+                    JOptionPane.INFORMATION_MESSAGE
+                )
             }
         }
         currentRoom?.item = null
@@ -237,6 +265,7 @@ fun roomInit(app: App){
     ruins.locNorth = garden
 
     garden.locSouth = ruins
+    garden.item = app.winKey
 
     market.locWest = village
     market.locNorth = lighthouse

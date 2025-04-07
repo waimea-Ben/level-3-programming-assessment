@@ -107,3 +107,89 @@ Set the `currentRoom` to "Dark Dungeon", set `hasKey2` to **false**, and attempt
 A dialog should appear saying movement is blocked. The player should remain in the same room. The `clicks` counter should not increase.
 
 ---
+
+## Valid Win Condition - Reach Final Room With Key
+
+This test checks that the game ends properly when the player reaches the final room with required key.
+
+### Test Data To Use
+
+Set `hasKey3` to **true**. Move to the final room.
+
+### Expected Test Result
+
+A win message should appear. Game buttons should be disabled. The player can no longer interact or move.
+
+---
+
+## Game Lock - Try to Move After Game Over
+
+This test ensures the player cannot continue playing once the game is complete.
+
+### Test Data To Use
+
+After entering the final room and triggering a win, attempt to move in any direction.
+
+### Expected Test Result
+
+Buttons should be disabled and the room should not change. No further actions should be possible.
+
+
+---
+
+
+## Compass UI - Display Direction With Compass
+
+This test checks that the compass only activates after being collected and shows a hint toward the final room.
+
+### Test Data To Use
+
+Start without compass, verify nothing is shown. Then pick up the compass.
+
+### Expected Test Result
+
+Before pickup, compass UI is empty or hidden. After pickup, compass UI updates to show direction. Game logic behaves correctly.
+
+---
+
+## Valid Multiple Key Pickups
+
+This checks that the player can collect multiple keys across different rooms and that inventory updates correctly.
+
+### Test Data To Use
+
+Visit rooms with keys (`Cave`, `Dark Dungeon`, etc.) and collect them one by one.
+
+### Expected Test Result
+
+Each key is collected only once. Player inventory reflects all collected keys. Movement restrictions tied to keys are lifted appropriately.
+
+---
+
+## Invalid Action - Try to Search Same Room Again After Pickup
+
+This test checks that once a key is picked up, it cannot be collected again.
+
+### Test Data To Use
+
+Search a room with a key, then search again after pickup.
+
+### Expected Test Result
+
+The item should not be given again. A dialog should indicate the room is empty. Game should continue normally.
+
+---
+
+## All inputs work
+
+This test checks that all keyboard and mouse inputs work
+
+### Test Data To Use
+
+Press all available keys and press all buttons
+
+### Expected Test Result
+
+all keys should have a valid action and be reliable
+
+---
