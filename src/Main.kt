@@ -64,7 +64,9 @@ class App{
     }
 
 
-
+/*
+ All movement functions (N,S,E,W)
+ */
     fun up(){
         if (currentRoom?.locNorth != null) {
             if (currentRoom!!.name == "Ruined Temple" && !hasKey3){  //shows dialog explaining locked path to user hinting to item
@@ -85,6 +87,7 @@ class App{
             }
 
             if (currentRoom!!.name == "Dark Dungeon" && !hasKey1){
+                // show dialogue about item being needed to unlock the path.
                 JOptionPane.showMessageDialog(
                     null,
                     "A path leads up but a door blocks the way, it seems an item is needed",
@@ -142,8 +145,9 @@ class App{
         }
     }
 
+    // search function
     fun search(){
-        when(currentRoom?.item){
+        when(currentRoom?.item){ // shows dialogue for each item and sets its has state to true
             key1 -> {
                 hasKey1 = true
                 JOptionPane.showMessageDialog(
@@ -191,13 +195,16 @@ class App{
                 )
             }
         }
+        // removes iterm from room to prevent double searching
         currentRoom?.item = null
     }
 
 }
 
 
-// room class with no directions by default
+/*
+ room class with no directions by default
+ */
 class Room(val name: String, val desc: String, val direction: String){
     var locNorth: Room? = null
     var locEast: Room? = null
@@ -207,7 +214,9 @@ class Room(val name: String, val desc: String, val direction: String){
 
 }
 
-// populate map with locations
+/*
+ populate map with locations
+ */
 fun roomInit(app: App){
     val entrance = Room("Entrance Hall", "A grand entrance with towering doors and flickering chandeliers.", "\uD83E\uDC56")
     val woodMan = Room("Woodland Mansion", "You find yourself in a dark and spooky building; bats linger around.","\uD83E\uDC56")
@@ -376,7 +385,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         jMenuBar = menuBar // Set as title bar menu
 
 
-
+        // arrange elements
         pack()
     }
 
@@ -387,9 +396,11 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
      */
     private fun addControls() {
 
+        // show help on start
         examplePopUp = PopUpDialog()
         examplePopUp.isVisible = true
 
+        // listener for direction and function key presses
         this.addKeyListener(this)
 
         val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 36)
@@ -399,6 +410,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         compass.bounds = Rectangle(50, 0, 100, 100)
         add(compass)
 
+        // amount of moves left based on direction changes
         clicksLabel = JLabel("50")
         clicksLabel.horizontalAlignment = SwingConstants.CENTER
         clicksLabel.bounds = Rectangle(50, 288, 100, 50)
@@ -418,6 +430,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         locationDescription.font = Font(Font.SANS_SERIF, Font.PLAIN, 16)
         add(locationDescription)
 
+        // direction arrows
         upButton = JButton("N")
         upButton.bounds = Rectangle(225, 233, 50, 50)
         upButton.font = baseFont
@@ -450,6 +463,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         rightButton.toolTipText = "East"
         add(rightButton)
 
+        // show inventory items
         inv1 = JLabel("Empty")
         inv1.bounds = Rectangle(18, 100, 150, 50)
         inv1.font = Font(Font.SANS_SERIF, Font.PLAIN, 28)
@@ -465,6 +479,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         inv3.font = Font(Font.SANS_SERIF, Font.PLAIN, 28)
         add(inv3)
 
+        // search button
         searchButton = JButton("\uD83D\uDD0E")
         searchButton.bounds = Rectangle(375, 200, 75, 75)
         searchButton.font = baseFont
@@ -510,11 +525,14 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
 
         val currentRoom = app.currentRoom
 
+
+        // sets texts to respective locations when changed
         locationLabel.text = currentRoom?.name ?: "Unknown"
         locationDescription.text = "<html>" + (currentRoom?.desc ?: "No desc")
 
 
-        // Shows a padlock icon on the direction arrow to indicate locked route
+        // Shows a padlock icon on the direction arrow to indicate locked
+        // and an unlocked when the user finds the key for that route
         upButton.text = when{
             currentRoom?.name == "Ruined Temple" && !app.hasKey3 -> ("\uD83D\uDD12")
             currentRoom?.name == "Dark Dungeon" && !app.hasKey1 -> ("\uD83D\uDD12")
@@ -556,6 +574,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         inv2.text = if(app.hasKey2) app.key2 else "Empty"
         inv3.text = if(app.hasKey3) app.key3 else "Empty"
 
+        //shows the direction arrow for each room when moved, if has compass item
         if(app.hasCompass) compass.text = currentRoom?.direction
 
     }
@@ -578,7 +597,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
     }
 
 
-
+// handles key presses, then updates ui
     override fun keyPressed(e: KeyEvent?) {
         when (e?.keyCode) {
             KeyEvent.VK_UP -> app.up()
@@ -596,6 +615,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         updateView() // run update view
     }
 
+    // redundant functions.
     override fun keyReleased(e: KeyEvent?) {
 
     }
@@ -606,7 +626,9 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
 }
 
 
-//Pop-up to show relevant details instructions and help
+/*
+Pop-up to show relevant details instructions and help
+ */
 class PopUpDialog: JDialog(), KeyListener {
 
     init {
@@ -616,6 +638,7 @@ class PopUpDialog: JDialog(), KeyListener {
         addKeyListener(this)
     }
 
+// populate popup with controls
     private fun addControls() {
         val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 16)
 
@@ -641,15 +664,16 @@ class PopUpDialog: JDialog(), KeyListener {
         pack()
     }
 
-    override fun keyTyped(e: KeyEvent?) {}
 
+//when escape key pressed close popup
     override fun keyPressed(e: KeyEvent?) {
         if (e?.keyCode == KeyEvent.VK_ESCAPE) {
             dispose()
         }
 
     }
-
+// redundant function
     override fun keyReleased(e: KeyEvent?) {}
+    override fun keyTyped(e: KeyEvent?) {}
 
     }

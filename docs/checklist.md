@@ -9,48 +9,48 @@ This checklist can be used to gauge progress towards different levels of success
 ### Program Functionality
 
 The game functions correctly and meets the specification:
-- [ ] The game is **playable**
-- [ ] The game has a **GUI** with a range of controls
-- [ ] The **instructions** for the game are available via the GUI
-- [ ] Player provides game **inputs via the GUI** (e.g. moves, actions)
-- [ ] The **current status** of the game is **shown in the GUI**, updated each player input
-- [ ] The game is based on a **non-trivial map**
-- [ ] The player can **move between locations**
-- [ ] The player has a **clear purpose** they can attempt to achieve
-- [ ] A **win / end / loss state** is possible
+- [x] The game is **playable**
+- [x] The game has a **GUI** with a range of controls
+- [x] The **instructions** for the game are available via the GUI
+- [x] Player provides game **inputs via the GUI** (e.g. moves, actions)
+- [x] The **current status** of the game is **shown in the GUI**, updated each player input
+- [x] The game is based on a **non-trivial map**
+- [x] The player can **move between locations**
+- [x] The player has a **clear purpose** they can attempt to achieve
+- [x] A **win / end / loss state** is possible
 
 ### Program Code
 
 The program stores data using:
-- [ ] **Variables** of at least two types (e.g. int, text, boolean)
+- [x] **Variables** of at least two types (e.g. int, text, boolean)
 
 The program structure:
-- [ ] Defines and implements a **graphical user interface (GUI)**
-- [ ] Makes use of user-defined OOP **classes** from which **objects** are instantiated
-- [ ] Uses **functions** / **methods** to break up the code logically
-- [ ] Contains **sequences** of instructions
-- [ ] Uses **conditional** instructions to control the program flow
-- [ ] Uses program **branches** (if...else, when, etc.)
+- [x] Defines and implements a **graphical user interface (GUI)**
+- [x] Makes use of user-defined OOP **classes** from which **objects** are instantiated
+- [x] Uses **functions** / **methods** to break up the code logically
+- [x] Contains **sequences** of instructions
+- [x] Uses **conditional** instructions to control the program flow
+- [x]Uses program **branches** (if...else, when, etc.)
 - [ ] Uses **iteration** (loops) to repeat things (for, while, etc.)
 
 ### Program Documentation
 
 The program code:
-- [ ] Is **indented** correctly
-- [ ] Is **laid-out clearly**
-- [ ] Contains **comments** that help in understanding how it works
+- [x] Is **indented** correctly
+- [x] Is **laid-out clearly**
+- [x] Contains **comments** that help in understanding how it works
 
 ### Program Testing
 
 The program has been tested and there is documented evidence that:
 - [ ] The game is **fully functional**, showing testing of:
   - [ ] game setup
-  - [ ] player movement
-  - [ ] other player actions
+  - [x] player movement
+  - [x] other player actions
   - [ ] scoring (if any)
-  - [ ] player win / lose states
+  - [x] player win / lose states
   - [ ] final feedback (if appropriate)
-- [ ] **Valid (expected) data** has been used to test **all data inputs**
+- [x] **Valid (expected) data** has been used to test **all data inputs**
 - [ ] Where tests have failed, **fixes** are discussed and **tests re-run**
 
 ---
@@ -80,13 +80,13 @@ The program uses functions appropriately, where:
 ### Game GUI
 
 The game GUI:
-- [ ] Adheres to **common conventions** (e.g. buttons look like buttons, etc.)
+- [x] Adheres to **common conventions** (e.g. buttons look like buttons, etc.)
 
 ### Program Documentation
 
 The program code is well-commented:
-- [ ] **JavaDoc Block comments** are used at the top of each **file** and **function**
-- [ ] Comments accurately describe the **function and behaviour** of the code:
+- [x] **JavaDoc Block comments** are used at the top of each **file** and **function**
+- [x] Comments accurately describe the **function and behaviour** of the code:
   - [ ] Defining the **purpose** of functions / key blocks of code
   - [ ] Explaining the **reason** (the '**why**') of key parts of the code
   - [ ] Defining function **parameters** and/or **return values**
@@ -94,8 +94,8 @@ The program code is well-commented:
 ### Program Testing
 
 The program has been tested using:
-- [ ] A test plan **prepared in advance** of the coding
-- [ ] A test plan that **defines test data values** to be used
+- [x] A test plan **prepared in advance** of the coding
+- [x] A test plan that **defines test data values** to be used
 - [ ] Test values that cover **boundary** (limit / edge) cases
 
 ---
@@ -105,14 +105,14 @@ The program has been tested using:
 ### Program Code
 
 Program flexibility and maintainability is aided by:
-- [ ] **Constants** being used to define key values, and used throughout the program
-- [ ] Variable values being **derived at run-time** (from other variables / constants)
-- [ ] Literal values only being used if they **make sense**, and they don't impact program flexibility
+- [x] **Constants** being used to define key values, and used throughout the program
+- [x] Variable values being **derived at run-time** (from other variables / constants)
+- [x] Literal values only being used if they **make sense**, and they don't impact program flexibility
 
 Program flexibility and maintainability is aided by good program structure:
-- [ ] Conditions, branching, loops and functions are used **effectively**
-- [ ] Procedures are **efficient** (minimal iterations, etc.)
-- [ ] **Minimal duplication of code** (instead using loops, or having multiple calls to a single function)
+- [x] Conditions, branching, loops and functions are used **effectively**
+- [x] Procedures are **efficient** (minimal iterations, etc.)
+- [x] **Minimal duplication of code** (instead using loops, or having multiple calls to a single function)
 - [ ] OOP classes are **well-chosen and logical**, with a clearly defined purpose
 - [ ] Functions are **well-chosen and logical**, with a clearly defined purpose
 - [ ] The classes and functions chosen represent a **logical decomposition** of the task
@@ -121,7 +121,7 @@ Program flexibility and maintainability is aided by good program structure:
 
 The game GUI:
 - [ ] Is **well laid out** with care and attention paid to details
-- [ ] Gives a **good uer experience (UX)**
+- [ ] Gives a **good user experience (UX)**
 
 ### Program Documentation
 
