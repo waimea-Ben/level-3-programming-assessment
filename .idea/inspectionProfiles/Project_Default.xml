@@ -6,5 +6,7 @@
         <language minSize="97" name="Kotlin" />
       </Languages>
     </inspection_tool>
+    <inspection_tool class="GradleKotlinxCoroutinesDeprecation" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="MavenCoroutinesDeprecation" enabled="true" level="ERROR" enabled_by_default="true" />
   </profile>
 </component>

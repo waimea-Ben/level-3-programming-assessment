@@ -17,6 +17,10 @@ import com.formdev.flatlaf.FlatDarkLaf
 import java.awt.*
 import java.awt.event.*
 import javax.swing.*
+import kotlin.reflect.full.memberProperties
+import javax.sound.sampled.AudioSystem
+
+
 
 
 /**
@@ -38,13 +42,14 @@ fun main() {
  */
 class App{
     // Constants defining any key values
-    val key1 = "Lost Book"
-    val key2 = "Gold Totem"
-    val key3 = "The Key"
-    val item4 = "Compass"
+    val KEY1 = "Lost Book"
+    val KEY2 = "Gold Totem"
+    val KEY3 = "The Key"
+    val COMPASS = "Compass"
     val winKey = "The Eldritch Toaster"
 
-    val maxMoves = 30
+
+    val MAX_MOVES = 30
 
     // Data fields
     var clicks = 0
@@ -60,7 +65,7 @@ class App{
     // Application logic functions
     private fun updateClickCount() {
         clicks++
-        if (clicks > maxMoves) clicks = maxMoves
+        if (clicks > MAX_MOVES) clicks = MAX_MOVES
     }
 
 
@@ -99,6 +104,8 @@ class App{
             updateClickCount()
         }
     }
+
+
 
     fun down(){
         if (currentRoom?.locSouth != null) {
@@ -148,39 +155,39 @@ class App{
     // search function
     fun search(){
         when(currentRoom?.item){ // shows dialogue for each item and sets its has state to true
-            key1 -> {
+            KEY1 -> {
                 hasKey1 = true
                 JOptionPane.showMessageDialog(
                     null,
                     "<html><p style=text-align: center;>You found a Book in the grasp of a skeleton. A note reads: <br> " +
                             "<i>A secret passage lies ahead, put this next to the book about the dead <i></p>",
-                    "Found: $key1",
+                    "Found: $KEY1",
                     JOptionPane.INFORMATION_MESSAGE)
             }
-            key2 -> {
+            KEY2 -> {
                 hasKey2 = true
                 JOptionPane.showMessageDialog(
                     null,
                     "<html><p style=text-align: center;>A Golden totem sits in a small leather pouch in the corner. an ominous shriek echos as you pick it up</p>",
-                    "Found: $key2",
+                    "Found: $KEY2",
                     JOptionPane.INFORMATION_MESSAGE)
             }
-            key3 ->{
+            KEY3 ->{
                 hasKey3 = true
                 JOptionPane.showMessageDialog(
                     null,
                     "<html><p style=text-align: center;>A blade of light pierces through a hole in the ceiling, illuminating a glistening golden key in the hands of a towering statue. " +
                             "<br><i>The Key to Life</i> <br> is engraved along the head.</p>",
-                    "Found: $key3",
+                    "Found: $KEY3",
                     JOptionPane.INFORMATION_MESSAGE)
 
             }
-            item4 ->{
+            COMPASS ->{
                 hasCompass = true
                 JOptionPane.showMessageDialog(
                     null,
                     "<html><p style='text-align: center;'>A hefty compass rests by the door, its needle spinning wildly before settling in one direction.</p>",
-                    "Found: $item4",
+                    "Found: $COMPASS",
                     JOptionPane.INFORMATION_MESSAGE
                 )
 
@@ -199,13 +206,22 @@ class App{
         currentRoom?.item = null
     }
 
+
+    val compassDirections = listOf("\uD83E\uDC51","\uD83E\uDC55","\uD83E\uDC52","\uD83E\uDC56","\uD83E\uDC53","\uD83E\uDC57","\uD83E\uDC50","\uD83E\uDC54")
+
+    fun compassSpin(){
+        if(currentRoom?.name == "Hidden Garden") {
+            currentRoom?.direction = compassDirections.random()
+        }
+}
+
 }
 
 
 /*
  room class with no directions by default
  */
-class Room(val name: String, val desc: String, val direction: String){
+class Room(val name: String, val desc: String, var direction: String){
     var locNorth: Room? = null
     var locEast: Room? = null
     var locSouth: Room? = null
@@ -218,25 +234,35 @@ class Room(val name: String, val desc: String, val direction: String){
  populate map with locations
  */
 fun roomInit(app: App){
-    val entrance = Room("Entrance Hall", "A grand entrance with towering doors and flickering chandeliers.", "\uD83E\uDC56")
-    val woodMan = Room("Woodland Mansion", "You find yourself in a dark and spooky building; bats linger around.","\uD83E\uDC56")
-    val forest = Room("Forest", "An empty forest with not much around.","\uD83E\uDC56")
-    val cave = Room("Cave", "Damp and cold, the echoes of dripping water fill the cavern.","\uD83E\uDC56")
-    val riverbank = Room("Riverbank", "A gentle river flows by, reflecting the light of the moon.","\uD83E\uDC52")
-    val bridge = Room("Old Bridge", "A rickety wooden bridge sways over a deep chasm.","\uD83E\uDC52")
-    val tower = Room("Watchtower", "A tall, crumbling tower with a view of the entire landscape.","\uD83E\uDC55")
-    val village = Room("Abandoned Village", "Houses stand in disrepair, long since left behind.","\uD83E\uDC54")
-    val library = Room("Ancient Library", "Dusty bookshelves line the walls, filled with forgotten knowledge.","\uD83E\uDC53")
-    val dungeon = Room("Dark Dungeon", "Chains hang from the walls, and the air smells of damp stone.","\uD83E\uDC54")
-    val ruins = Room("Ruined Temple", "Overgrown with vines, this place holds the whispers of the past.","\uD83E\uDC51")
+    //Direction constants
+    val N = "\uD83E\uDC51"
+    val NE = "\uD83E\uDC55"
+    val E = "\uD83E\uDC52"
+    val SE = "\uD83E\uDC56"
+    val S = "\uD83E\uDC53"
+//  val SW = "\uD83E\uDC57" not used as no rooms to north east of gardens
+    val W = "\uD83E\uDC50"
+    val NW = "\uD83E\uDC54"
+
+    val entrance = Room("Entrance Hall", "A grand entrance with towering doors and flickering chandeliers.", SE)
+    val woodMan = Room("Woodland Mansion", "You find yourself in a dark and spooky building; bats linger around.",SE)
+    val forest = Room("Forest", "An empty forest with not much around.",SE)
+    val cave = Room("Cave", "Damp and cold, the echoes of dripping water fill the cavern.",SE)
+    val riverbank = Room("Riverbank", "A gentle river flows by, reflecting the light of the moon.",E)
+    val bridge = Room("Old Bridge", "A rickety wooden bridge sways over a deep chasm.",E)
+    val tower = Room("Watchtower", "A tall, crumbling tower with a view of the entire landscape.",NE)
+    val village = Room("Abandoned Village", "Houses stand in disrepair, long since left behind.",NW)
+    val library = Room("Ancient Library", "Dusty bookshelves line the walls, filled with forgotten knowledge.",S)
+    val dungeon = Room("Dark Dungeon", "Chains hang from the walls, and the air smells of damp stone.",NW)
+    val ruins = Room("Ruined Temple", "Overgrown with vines, this place holds the whispers of the past.",N)
     val garden = Room("Hidden Garden", "A beautiful, untouched oasis filled with vibrant flowers.","·")
-    val market = Room("Deserted Market", "Stalls remain, but no merchants can be found.","\uD83E\uDC54")
-    val lighthouse = Room("Old Lighthouse", "A spiraling staircase leads up to a broken beacon.","\uD83E\uDC50")
-    val catacombs = Room("Catacombs", "Narrow tunnels wind through the earth, filled with the bones of the past.","\uD83E\uDC50")
+    val market = Room("Deserted Market", "Stalls remain, but no merchants can be found.",NW)
+    val lighthouse = Room("Old Lighthouse", "A spiraling staircase leads up to a broken beacon.",W)
+    val catacombs = Room("Catacombs", "Narrow tunnels wind through the earth, filled with the bones of the past.",W)
 
 // instantiate connections between rooms
     entrance.locNorth = woodMan
-    entrance.item = app.item4
+    entrance.item = app.COMPASS
 
     woodMan.locSouth = entrance
     woodMan.locWest = forest
@@ -247,7 +273,7 @@ fun roomInit(app: App){
 
     cave.locNorth = forest
     cave.locEast = riverbank
-    cave.item = app.key1 // adding key1 to room
+    cave.item = app.KEY1 // adding key1 to room
 
     riverbank.locWest = cave
     riverbank.locSouth = bridge
@@ -267,7 +293,7 @@ fun roomInit(app: App){
     dungeon.locNorth = library
     dungeon.locEast = village
     dungeon.locWest = ruins
-    dungeon.item = app.key2
+    dungeon.item = app.KEY2
 
     ruins.locWest = tower
     ruins.locEast = dungeon
@@ -283,7 +309,7 @@ fun roomInit(app: App){
     lighthouse.locWest = catacombs
 
     catacombs.locEast = lighthouse
-    catacombs.item = app.key3
+    catacombs.item = app.KEY3
 
     app.currentRoom = entrance // starting room
 
@@ -319,6 +345,12 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
     private lateinit var examplePopUp: PopUpDialog
     private lateinit var compass: JLabel
 
+    private lateinit var compassSpinClock: Timer
+
+    //Costants
+    val LOCKED = "\uD83D\uDD12"
+    val UNLOCKED = "\uD83D\uDD13"
+
 
 
 
@@ -334,6 +366,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         setLocationRelativeTo(null)     // Centre the window
         isVisible = true                // Make it visible
         updateView()                    // Initialise the UI
+
+        compassSpinClock.start()
     }
 
     /**
@@ -404,6 +438,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         this.addKeyListener(this)
 
         val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 36)
+
+        compassSpinClock = Timer(200, this)
 
         compass = JLabel("")
         compass.font = baseFont
@@ -502,7 +538,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
 
         this.requestFocus()
 
-        if (app.clicks >= app.maxMoves) {
+        if (app.clicks >= app.MAX_MOVES) {
             // Disable movement buttons after death
             upButton.isEnabled = false
             downButton.isEnabled = false
@@ -520,7 +556,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
 
         }
         else {
-            clicksLabel.text = (app.maxMoves-app.clicks).toString()
+            clicksLabel.text = (app.MAX_MOVES-app.clicks).toString()
         }
 
         val currentRoom = app.currentRoom
@@ -534,28 +570,28 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         // Shows a padlock icon on the direction arrow to indicate locked
         // and an unlocked when the user finds the key for that route
         upButton.text = when{
-            currentRoom?.name == "Ruined Temple" && !app.hasKey3 -> ("\uD83D\uDD12")
-            currentRoom?.name == "Dark Dungeon" && !app.hasKey1 -> ("\uD83D\uDD12")
-            currentRoom?.name == "Ruined Temple" && app.hasKey3 -> ("\uD83D\uDD13")
-            currentRoom?.name == "Dark Dungeon" && app.hasKey1 -> ("\uD83D\uDD13")
+            currentRoom?.name == "Ruined Temple" && !app.hasKey3 -> (LOCKED)
+            currentRoom?.name == "Dark Dungeon" && !app.hasKey1 -> (LOCKED)
+            currentRoom?.name == "Ruined Temple" && app.hasKey3 -> (UNLOCKED)
+            currentRoom?.name == "Dark Dungeon" && app.hasKey1 -> (UNLOCKED)
             else -> "N"
         }
 
         downButton.text = when{
-            currentRoom?.name == "Ancient Library" && !app.hasKey1 -> ("\uD83D\uDD12")
-            currentRoom?.name == "Ancient Library" && app.hasKey1 -> ("\uD83D\uDD13")
+            currentRoom?.name == "Ancient Library" && !app.hasKey1 -> (LOCKED)
+            currentRoom?.name == "Ancient Library" && app.hasKey1 -> (UNLOCKED)
             else -> "S"
         }
 
         rightButton.text = when{
-            currentRoom?.name == "Dark Dungeon" && !app.hasKey2 -> "\uD83D\uDD12"
-            currentRoom?.name == "Dark Dungeon" && app.hasKey2 -> "\uD83D\uDD13"
+            currentRoom?.name == "Dark Dungeon" && !app.hasKey2 -> LOCKED
+            currentRoom?.name == "Dark Dungeon" && app.hasKey2 -> UNLOCKED
             else -> "E"
         }
 
         leftButton.text = when{
-            currentRoom?.name == "Abandoned Village" && !app.hasKey2 -> ("\uD83D\uDD12")
-            currentRoom?.name == "Abandoned Village" && app.hasKey2 -> ("\uD83D\uDD13")
+            currentRoom?.name == "Abandoned Village" && !app.hasKey2 -> (LOCKED)
+            currentRoom?.name == "Abandoned Village" && app.hasKey2 -> (UNLOCKED)
             else -> "W"
         }
 
@@ -570,14 +606,59 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         searchButton.isEnabled = currentRoom?.item != null
 
         // when item found update inventory slot
-        inv1.text = if(app.hasKey1) app.key1 else "Empty"
-        inv2.text = if(app.hasKey2) app.key2 else "Empty"
-        inv3.text = if(app.hasKey3) app.key3 else "Empty"
+        inv1.text = if(app.hasKey1) app.KEY1 else "Empty"
+        inv2.text = if(app.hasKey2) app.KEY2 else "Empty"
+        inv3.text = if(app.hasKey3) app.KEY3 else "Empty"
 
         //shows the direction arrow for each room when moved, if has compass item
         if(app.hasCompass) compass.text = currentRoom?.direction
 
+
     }
+
+    /**
+     * secret key codes
+     * when sequence entered secret functions run
+     * secret code 1 is left right up down b a enter
+     */
+    val secretCode1 = listOf(KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_B, KeyEvent.VK_A, KeyEvent.VK_ENTER)
+    val secretCode2 = listOf(KeyEvent.VK_P, KeyEvent.VK_L, KeyEvent.VK_A, KeyEvent.VK_Y)
+
+    val recentKeys = mutableListOf<Int>()
+    val maxLen = secretCode1.size
+
+// when secret code one run teleports user to the room they enter
+    fun secretcode1() {
+        val input = JOptionPane.showInputDialog(null, "Which room to teleport to?", "Secret Code", JOptionPane.PLAIN_MESSAGE)
+        if (input != null) {
+            val room = findRoomByName(app.currentRoom, input.trim())
+            if (room != null) {
+                app.currentRoom = room
+            } else {
+                JOptionPane.showMessageDialog(null, "No room found with the name \"$input\".", "Error", JOptionPane.ERROR_MESSAGE)
+            }
+        }
+    }
+
+// flood searches for the room as cannot use "current room = input" due to mismatch
+    fun findRoomByName(current: Room?, name: String, visited: MutableSet<Room> = mutableSetOf()): Room? {
+        if (current == null || current in visited) return null
+        if (current.name.equals(name, ignoreCase = true)) return current
+        visited.add(current)
+
+        // Check each connected room
+        val neighbors = listOf(current.locNorth, current.locEast, current.locSouth, current.locWest)
+        for (room in neighbors) {
+            val found = findRoomByName(room, name, visited)
+            if (found != null) return found
+        }
+        return null
+    }
+
+    fun secretCode2(){
+
+    }
+
 
     /**
      * Handle any UI events (e.g. button clicks)
@@ -592,6 +673,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
             rightButton -> app.right()
 
             searchButton -> app.search()
+
+            compassSpinClock -> app.compassSpin()
         }
         updateView() // run update view
     }
@@ -599,13 +682,26 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
 
 // handles key presses, then updates ui
     override fun keyPressed(e: KeyEvent?) {
-        when (e?.keyCode) {
+
+    // Adds recent key presses to lists
+    recentKeys.add(e?.keyCode ?: return)
+    if (recentKeys.size > maxLen) {
+        recentKeys.removeAt(0)
+    }
+    if(recentKeys == secretCode1) {
+        secretcode1()
+    }
+    if (recentKeys == secretCode2){
+        secretCode2()
+    }
+
+    when (e.keyCode) {
             KeyEvent.VK_UP -> app.up()
             KeyEvent.VK_DOWN -> app.down()
             KeyEvent.VK_LEFT -> app.left()
             KeyEvent.VK_RIGHT -> app.right()
 
-            KeyEvent.VK_ENTER -> app.search()
+            //KeyEvent.VK_ENTER -> app.search()
             KeyEvent.VK_S -> app.search()
 
             KeyEvent.VK_H -> examplePopUp.isVisible = true

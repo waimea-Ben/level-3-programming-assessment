@@ -31,7 +31,7 @@ The program structure:
 - [x] Contains **sequences** of instructions
 - [x] Uses **conditional** instructions to control the program flow
 - [x]Uses program **branches** (if...else, when, etc.)
-- [ ] Uses **iteration** (loops) to repeat things (for, while, etc.)
+- [x] Uses **iteration** (loops) to repeat things (for, while, etc.)
 
 ### Program Documentation
 
@@ -87,7 +87,7 @@ The game GUI:
 The program code is well-commented:
 - [x] **JavaDoc Block comments** are used at the top of each **file** and **function**
 - [x] Comments accurately describe the **function and behaviour** of the code:
-  - [ ] Defining the **purpose** of functions / key blocks of code
+  - [x] Defining the **purpose** of functions / key blocks of code
   - [ ] Explaining the **reason** (the '**why**') of key parts of the code
   - [ ] Defining function **parameters** and/or **return values**
 
