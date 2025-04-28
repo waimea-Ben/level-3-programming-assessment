@@ -5,9 +5,6 @@
  * Project Name:   Freaky Ahh  House
  * Project Author: Ben Martin
  * GitHub Repo:    https://github.com/waimea-Ben/level-3-programming-assessment
- * ---------------------------------------------------------------------
- * Notes:
- * PROJECT NOTES HERE
  * =====================================================================
  */
 
@@ -70,7 +67,8 @@ class App{
 
 
 /*
- All movement functions (N,S,E,W)
+ All movement functions (N,S,E,W),
+ returns before moving onto next if to ensure code is not run twice
  */
     fun up(){
         if (currentRoom?.locNorth != null) {
@@ -570,16 +568,16 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         // Shows a padlock icon on the direction arrow to indicate locked
         // and an unlocked when the user finds the key for that route
         upButton.text = when{
-            currentRoom?.name == "Ruined Temple" && !app.hasKey3 -> (LOCKED)
-            currentRoom?.name == "Dark Dungeon" && !app.hasKey1 -> (LOCKED)
-            currentRoom?.name == "Ruined Temple" && app.hasKey3 -> (UNLOCKED)
-            currentRoom?.name == "Dark Dungeon" && app.hasKey1 -> (UNLOCKED)
+            currentRoom?.name == "Ruined Temple" && !app.hasKey3 -> LOCKED
+            currentRoom?.name == "Dark Dungeon" && !app.hasKey1 -> LOCKED
+            currentRoom?.name == "Ruined Temple" && app.hasKey3 -> UNLOCKED
+            currentRoom?.name == "Dark Dungeon" && app.hasKey1 -> UNLOCKED
             else -> "N"
         }
 
         downButton.text = when{
-            currentRoom?.name == "Ancient Library" && !app.hasKey1 -> (LOCKED)
-            currentRoom?.name == "Ancient Library" && app.hasKey1 -> (UNLOCKED)
+            currentRoom?.name == "Ancient Library" && !app.hasKey1 -> LOCKED
+            currentRoom?.name == "Ancient Library" && app.hasKey1 -> UNLOCKED
             else -> "S"
         }
 
@@ -590,8 +588,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         }
 
         leftButton.text = when{
-            currentRoom?.name == "Abandoned Village" && !app.hasKey2 -> (LOCKED)
-            currentRoom?.name == "Abandoned Village" && app.hasKey2 -> (UNLOCKED)
+            currentRoom?.name == "Abandoned Village" && !app.hasKey2 -> LOCKED
+            currentRoom?.name == "Abandoned Village" && app.hasKey2 -> UNLOCKED
             else -> "W"
         }
 
@@ -656,7 +654,11 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
     }
 
     fun secretCode2(){
-
+        val soundFile = this::class.java.getResourceAsStream("sounds/metal-pipe.wav")
+        val soundStream = AudioSystem.getAudioInputStream(soundFile)
+        val soundClip = AudioSystem.getClip()
+        soundClip.open(soundStream)
+        soundClip.start()
     }
 
 
@@ -683,8 +685,10 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
 // handles key presses, then updates ui
     override fun keyPressed(e: KeyEvent?) {
 
-    // Adds recent key presses to lists
+    // Adds recent key presses to lists for cheat code system
     recentKeys.add(e?.keyCode ?: return)
+
+    //ensures recent keys does not exceed cheat code length
     if (recentKeys.size > maxLen) {
         recentKeys.removeAt(0)
     }

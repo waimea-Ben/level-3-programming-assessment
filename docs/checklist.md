@@ -1,6 +1,6 @@
 # Success Criteria Checklist
 
-This checklist can be used to gauge progress towards different levels of success. Note that to pass, *all* of the Achieve Criteria must be met; for Merit, you need all Achieve, plus all the Merit Criteria, and so on for Excellence too.
+This checklist can be used to gauge progress towards different levels of success. Note that to pass, *all* the Achieve Criteria must be met; for Merit, you need all Achieve, plus all the Merit Criteria, and so on for Excellence too.
 
 ---
 
@@ -43,7 +43,7 @@ The program code:
 ### Program Testing
 
 The program has been tested and there is documented evidence that:
-- [ ] The game is **fully functional**, showing testing of:
+- [x] The game is **fully functional**, showing testing of:
   - [ ] game setup
   - [x] player movement
   - [x] other player actions
@@ -113,20 +113,20 @@ Program flexibility and maintainability is aided by good program structure:
 - [x] Conditions, branching, loops and functions are used **effectively**
 - [x] Procedures are **efficient** (minimal iterations, etc.)
 - [x] **Minimal duplication of code** (instead using loops, or having multiple calls to a single function)
-- [ ] OOP classes are **well-chosen and logical**, with a clearly defined purpose
-- [ ] Functions are **well-chosen and logical**, with a clearly defined purpose
-- [ ] The classes and functions chosen represent a **logical decomposition** of the task
+- [x] OOP classes are **well-chosen and logical**, with a clearly defined purpose
+- [x] Functions are **well-chosen and logical**, with a clearly defined purpose
+- [x] The classes and functions chosen represent a **logical decomposition** of the task
 
 ### Game GUI
 
 The game GUI:
-- [ ] Is **well laid out** with care and attention paid to details
-- [ ] Gives a **good user experience (UX)**
+- [x] Is **well laid out** with care and attention paid to details
+- [x] Gives a **good user experience (UX)**
 
 ### Program Documentation
 
 The program code:
-- [ ] Code is laid-out and organised **logically and concisely**
+- [x] Code is laid-out and organised **logically and concisely**
 
 ### Program Testing
 
@@ -134,4 +134,4 @@ The program has been tested to be **robust**:
 - [ ] With a **comprehensive and thorough** test plan
 - [ ] Testing **regularly** throughput development, allowing **time for debugging**
 - [ ] Using test values that cover **invalid** (unexpected) cases
-- [ ] Resulting in a program that **copes appropriately** with invalid inputs
+- [x] Resulting in a program that **copes appropriately** with invalid inputs
