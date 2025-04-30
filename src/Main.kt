@@ -30,7 +30,7 @@ fun main() {
     MainWindow(app)         // Create and show the UI, using the app model
 
 }
-
+/************************************************************************************************************************/
 
 /**
  * The application class (model)
@@ -81,6 +81,14 @@ class App{
                 return
             }
             if (currentRoom!!.name == "Ruined Temple" && hasKey3) {  //shows dialogue about the door unlocking
+                JOptionPane.showMessageDialog(
+                    null,
+                    "<html><p style=text-align: center;>The key slides into the lock with a satisfying click.<br>As you turn it the ground seems to shake around you as the giant archways creaks open as your blinded by the beams of light piecing through the opening</p>",
+                    "Unlocked Path",
+                    JOptionPane.QUESTION_MESSAGE
+                )
+                clicks = -550
+
                 JOptionPane.showMessageDialog(
                     null,
                     "<html><p style=text-align: center;>The key slides into the lock with a satisfying click.<br>As you turn it the ground seems to shake around you as the giant archways creaks open as your blinded by the beams of light piecing through the opening</p>",
@@ -194,10 +202,12 @@ class App{
                 hasWinKey = true
                 JOptionPane.showMessageDialog(
                     null,
-                    "<html><p style='text-align: center;'>Within the growths of the pristine garden greens, A relic lies within. An ancient toaster that whispers in tongues. Burnt bread holds the secrets of the house.</p>",
+                    "<html><p style='text-align: center;'>Within the growths of the pristine garden greens, A relic lies within. An ancient toaster that whispers in tongues. Burnt bread holds the secrets of the house. <br> You have survived the plague and live happily ever after yay</p>",
                     "Found: $winKey",
                     JOptionPane.INFORMATION_MESSAGE
                 )
+                System.exit(0)
+
             }
         }
         // removes iterm from room to prevent double searching
@@ -211,10 +221,11 @@ class App{
         if(currentRoom?.name == "Hidden Garden") {
             currentRoom?.direction = compassDirections.random()
         }
-}
+    }
 
 }
 
+/***************************************************************************************************************************/
 
 /*
  room class with no directions by default
@@ -242,21 +253,21 @@ fun roomInit(app: App){
     val W = "\uD83E\uDC50"
     val NW = "\uD83E\uDC54"
 
-    val entrance = Room("Entrance Hall", "A grand entrance with towering doors and flickering chandeliers.", SE)
-    val woodMan = Room("Woodland Mansion", "You find yourself in a dark and spooky building; bats linger around.",SE)
-    val forest = Room("Forest", "An empty forest with not much around.",SE)
-    val cave = Room("Cave", "Damp and cold, the echoes of dripping water fill the cavern.",SE)
-    val riverbank = Room("Riverbank", "A gentle river flows by, reflecting the light of the moon.",E)
-    val bridge = Room("Old Bridge", "A rickety wooden bridge sways over a deep chasm.",E)
-    val tower = Room("Watchtower", "A tall, crumbling tower with a view of the entire landscape.",NE)
-    val village = Room("Abandoned Village", "Houses stand in disrepair, long since left behind.",NW)
-    val library = Room("Ancient Library", "Dusty bookshelves line the walls, filled with forgotten knowledge.",S)
-    val dungeon = Room("Dark Dungeon", "Chains hang from the walls, and the air smells of damp stone.",NW)
-    val ruins = Room("Ruined Temple", "Overgrown with vines, this place holds the whispers of the past.",N)
-    val garden = Room("Hidden Garden", "A beautiful, untouched oasis filled with vibrant flowers.","·")
-    val market = Room("Deserted Market", "Stalls remain, but no merchants can be found.",NW)
-    val lighthouse = Room("Old Lighthouse", "A spiraling staircase leads up to a broken beacon.",W)
-    val catacombs = Room("Catacombs", "Narrow tunnels wind through the earth, filled with the bones of the past.",W)
+    val entrance = Room("Entrance Hall", "<html><p style=text-align: center;>A grand entrance with towering doors and flickering chandeliers.", SE)
+    val woodMan = Room("Woodland Mansion", "<html><p style=text-align: center;>You find yourself in a dark and spooky building; bats linger around.",SE)
+    val forest = Room("Forest", "<html><p style=text-align: center;>An empty forest with not much around.",SE)
+    val cave = Room("Cave", "<html><p style=text-align: center;>Damp and cold, the echoes of dripping water fill the cavern.",SE)
+    val riverbank = Room("Riverbank", "<html><p style=text-align: center;>A gentle river flows by, reflecting the light of the moon.",E)
+    val bridge = Room("Old Bridge", "<html><p style=text-align: center;>A rickety wooden bridge sways over a deep chasm.",E)
+    val tower = Room("Watchtower", "<html><p style=text-align: center;>A tall, crumbling tower with a view of the entire landscape.",NE)
+    val village = Room("Abandoned Village", "<html><p style=text-align: center;>Houses stand in disrepair, long since left behind.",NW)
+    val library = Room("Ancient Library", "<html><p style=text-align: center;>Dusty bookshelves line the walls, filled with forgotten knowledge.",S)
+    val dungeon = Room("Dark Dungeon", "<html><p style=text-align: center;>Chains hang from the walls, and the air smells of damp stone.",NW)
+    val ruins = Room("Ruined Temple", "<html><p style=text-align: center;>Overgrown with vines, this place holds the whispers of the past.",N)
+    val garden = Room("Hidden Garden", "<html><p style=text-align: center;>A beautiful, untouched oasis filled with vibrant flowers.","·")
+    val market = Room("Deserted Market", "<html><p style=text-align: center;>Stalls remain, but no merchants can be found.",NW)
+    val lighthouse = Room("Old Lighthouse", "<html><p style=text-align: center;>A spiraling staircase leads up to a broken beacon.",W)
+    val catacombs = Room("Catacombs", "<html><p style=text-align: center;>Narrow tunnels wind through the earth, filled with the bones of the past.",W)
 
 // instantiate connections between rooms
     entrance.locNorth = woodMan
@@ -316,6 +327,7 @@ fun roomInit(app: App){
 
 
 }
+/***************************************************************************************************************************/
 
 /**
  * Main UI window (view)
@@ -348,11 +360,6 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
     //Costants
     val LOCKED = "\uD83D\uDD12"
     val UNLOCKED = "\uD83D\uDD13"
-
-
-
-
-
 
 
     /**
@@ -459,7 +466,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         add(locationLabel)
 
         locationDescription = JLabel("desc")
-        locationDescription.bounds = Rectangle(180, 80, 200, 200)
+        locationDescription.bounds = Rectangle(150, 80, 200, 200)
         locationDescription.setVerticalAlignment(SwingConstants.TOP)
         locationDescription.font = Font(Font.SANS_SERIF, Font.PLAIN, 16)
         add(locationDescription)
@@ -527,7 +534,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
     }
 
 
-
+    /***************************************************************************************************************************/
     /**
      * Update the UI controls based on the current state
      * of the application model
@@ -548,7 +555,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
                 null,
                 "<html><p style=text-align: center;>The ghastly plague is released, removing you from the timeline of life <br> \n" +
                         "<i>for you, the game is over... <i></p>",
-                "Game Over",
+                "Intentional game design",
                 JOptionPane.INFORMATION_MESSAGE)
             dispose()
 
@@ -614,6 +621,8 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
 
     }
 
+/***************************************************************************************************************************/
+
     /**
      * secret key codes
      * when sequence entered secret functions run
@@ -638,13 +647,17 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         }
     }
 
-// flood searches for the room as cannot use "current room = input" due to mismatch
+/* flood searches for the room as cannot use "current room = input" due to mismatch
+*  uses recursive search
+*  avoids revistitng rooms by kkeeping track of visited ones
+*  searches all neighbouring rooms of current room, the searches all  of their neighbours etc
+ */
     fun findRoomByName(current: Room?, name: String, visited: MutableSet<Room> = mutableSetOf()): Room? {
         if (current == null || current in visited) return null
         if (current.name.equals(name, ignoreCase = true)) return current
         visited.add(current)
 
-        // Check each connected room
+        // Check each connected room for room
         val neighbors = listOf(current.locNorth, current.locEast, current.locSouth, current.locWest)
         for (room in neighbors) {
             val found = findRoomByName(room, name, visited)
@@ -653,6 +666,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         return null
     }
 
+    // play sounds when secret code two called via soundStream plugin
     fun secretCode2(){
         val soundFile = this::class.java.getResourceAsStream("sounds/metal-pipe.wav")
         val soundStream = AudioSystem.getAudioInputStream(soundFile)
@@ -661,7 +675,7 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         soundClip.start()
     }
 
-
+    /***************************************************************************************************************************/
     /**
      * Handle any UI events (e.g. button clicks)
      * Usually this involves updating the application model
@@ -676,38 +690,45 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
 
             searchButton -> app.search()
 
+            //randomly spin compass every time a tick recieved
             compassSpinClock -> app.compassSpin()
         }
         updateView() // run update view
     }
 
 
-// handles key presses, then updates ui
+    // handles key presses, then updates ui
     override fun keyPressed(e: KeyEvent?) {
 
-    // Adds recent key presses to lists for cheat code system
-    recentKeys.add(e?.keyCode ?: return)
+        // Adds recent key presses to lists for cheat code system
+        recentKeys.add(e?.keyCode ?: return)
 
-    //ensures recent keys does not exceed cheat code length
-    if (recentKeys.size > maxLen) {
-        recentKeys.removeAt(0)
-    }
-    if(recentKeys == secretCode1) {
-        secretcode1()
-    }
-    if (recentKeys == secretCode2){
-        secretCode2()
-    }
+        //ensures recent keys does not exceed cheat code length
+        if (recentKeys.size > maxLen) recentKeys.removeAt(0)
 
-    when (e.keyCode) {
+        if(recentKeys == secretCode1) secretcode1()
+
+        //because secret code 2 is only four characters long, only read the last 4 digits of recentKeys
+        if (recentKeys.takeLast(4) == secretCode2) secretCode2()
+
+
+        when (e.keyCode) {
+        // Direction/arrow keys
             KeyEvent.VK_UP -> app.up()
             KeyEvent.VK_DOWN -> app.down()
             KeyEvent.VK_LEFT -> app.left()
             KeyEvent.VK_RIGHT -> app.right()
 
-            //KeyEvent.VK_ENTER -> app.search()
-            KeyEvent.VK_S -> app.search()
+        //WASD keys
+            KeyEvent.VK_W -> app.up()
+            KeyEvent.VK_S -> app.down()
+            KeyEvent.VK_A -> app.left()
+            KeyEvent.VK_D -> app.right()
 
+        //Search keys
+            KeyEvent.VK_SHIFT -> app.search()
+
+        //Bring popup help menu back when either ? or H key pressed
             KeyEvent.VK_H -> examplePopUp.isVisible = true
             KeyEvent.VK_SLASH -> examplePopUp.isVisible = true
 
@@ -715,17 +736,13 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         updateView() // run update view
     }
 
-    // redundant functions.
-    override fun keyReleased(e: KeyEvent?) {
-
-    }
-    override fun keyTyped(e: KeyEvent?) {
-
-    }
-
+    //redundant functions
+    override fun keyReleased(e: KeyEvent?) {}
+    override fun keyTyped(e: KeyEvent?) {}
 }
 
 
+/***************************************************************************************************************************/
 /*
 Pop-up to show relevant details instructions and help
  */
@@ -743,12 +760,12 @@ class PopUpDialog: JDialog(), KeyListener {
         val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 16)
 
         val message = JLabel(
-            "<html><p><strong>Welcome to Freaky Ahh House!</strong><br><br>Explore a spooky mansion and collect keys to unlock new areas. " +
-                    "Move through rooms using the direction buttons or arrow keys, and keep an eye on on the search button (S) for important items needed to progress.<br><br>" +
+            "<html><p style=text-align: center;><strong>Welcome to Freaky Ahh House!</strong><br><br>Explore a spooky mansion and collect keys to unlock new areas. " +
+                    "Move through rooms using the direction buttons or arrow keys, and keep an eye on on the search button (SHIFT) for important items needed to progress.<br><br>" +
                     "Your goal is to find all the keys and uncover the mansion's secret garden before being removed from existence by a miserable plague released after you run out of steps. " +
                     "Some paths are locked, so you’ll need to gather items to unlock them.<br><br>Good luck, and enjoy the adventure!<br><br>H or ? to bring this menu back up.</p>"
         )
-        message.bounds = Rectangle(25, 25, 475, 325)
+        message.bounds = Rectangle(15, 25, 475, 325)
         message.verticalAlignment = SwingConstants.TOP
         message.font = baseFont
         add(message)
@@ -766,14 +783,14 @@ class PopUpDialog: JDialog(), KeyListener {
 
 
 //when escape key pressed close popup
-    override fun keyPressed(e: KeyEvent?) {
-        if (e?.keyCode == KeyEvent.VK_ESCAPE) {
-            dispose()
-        }
-
+    override fun keyPressed(e: KeyEvent?){
+        if (e?.keyCode == KeyEvent.VK_ESCAPE) dispose()
     }
+
 // redundant function
     override fun keyReleased(e: KeyEvent?) {}
     override fun keyTyped(e: KeyEvent?) {}
 
-    }
+}
+
+/***************************************************************************************************************************/
