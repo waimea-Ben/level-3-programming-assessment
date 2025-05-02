@@ -601,11 +601,16 @@ class MainWindow(private val app: App) : JFrame(), ActionListener, KeyListener {
         }
 
 
+
         //disables buttons when no direction available
         upButton.isEnabled = currentRoom?.locNorth != null
         downButton.isEnabled = currentRoom?.locSouth != null
         leftButton.isEnabled = currentRoom?.locWest != null
         rightButton.isEnabled = currentRoom?.locEast != null
+
+        if(currentRoom?.name == "Hidden Garden"){
+            downButton.isEnabled = false
+        }
 
         // no item no search
         searchButton.isEnabled = currentRoom?.item != null
